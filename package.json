@@ -1,0 +1,15 @@
+{
+  "name": "cr-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node socket.js",        
+    "local:socket": "node socket.js", 
+    "local:webhook": "node server.js" 
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.4.0",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}
