@@ -53,12 +53,12 @@ app.event("message", async ({ event }) => {
     lastTriggerTs = event.ts;
 
     // Scripted sequence (top-level posts)
-    await sleep(7000); // wait 15 seconds before Linda starts
+    await sleep(10000); // wait before Linda starts
     await postAs(TOKEN_LINDA, "No problem.  Let’s roll back the change and lower Mateo’s hours on the Agentforce project for that week from 30 to 20.");
-    await sleep(7000);
+    await sleep(10000);
     await postAs(TOKEN_BOB, "Thank you Linda, I appreciate it!");
-    await sleep(7000);
-    await postAs(TOKEN_GINA, "Thank you both. Our Certinia Staffing Agent will proceed with the update for Mateo.");
+    await sleep(10000);
+    await postAs(TOKEN_GINA, "Thank you both. <@U09EXF70ZGC> please proceed with the above update for Mateo.");
   } catch (e) {
     console.error("Handler error:", e);
   }
