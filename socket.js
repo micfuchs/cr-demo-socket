@@ -54,7 +54,7 @@ app.event("message", async ({ event }) => {
 
     // Scripted sequence (top-level posts)
     await sleep(10000); // wait before Linda starts
-    await postAs(TOKEN_LINDA, "No problem.  Let’s roll back the change I just made, and we can lower Mateo’s hours on the Agentforce project for that week from 30 to 20.");
+    await postAs(TOKEN_LINDA, "No problem.  Let’s roll back the change I just made, and we can lower Mateo’s hours on the Agentforce project for that week from 30 down to 20.");
     await sleep(10000);
     await postAs(TOKEN_BOB, "Thank you Linda, I appreciate it!");
     await sleep(10000);
