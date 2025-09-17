@@ -68,3 +68,11 @@ app.event("message", async ({ event }) => {
   await app.start();
   console.log("✅ Socket mode listener running. Waiting for 'coordinate' in channel:", CHANNEL);
 })();
+
+
+// --- tiny HTTP health server so Render can wake this service ---
+import express from "express";
+const health = express();
+health.get("/", (_req, res) => res.status(200).send("ok"));
+const PORT = process.env.PORT || 3000;
+health.listen(PORT, () => console.log("Health server listening on", PORT));
