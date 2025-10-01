@@ -10,9 +10,6 @@ const TOKEN_LINDA = process.env.SLACK_TOKEN_LINDA;
 const TOKEN_GINA  = process.env.SLACK_TOKEN_GINA;
 const TOKEN_BOB   = process.env.SLACK_TOKEN_BOB;
 
-// Bot token (post as the app/bot itself)
-const TOKEN_BOT = process.env.SLACK_BOT_TOKEN;
-
 // Bolt Socket Mode app
 const app = new App({
   appToken: process.env.SLACK_APP_TOKEN, // xapp-...
@@ -38,9 +35,10 @@ async function postAs(token, text) {
 
 let lastTriggerTs = null;
 
-app.event("message", async ({ event }) => {
+app.event("message", async ({ event, client, logger }) => {
   try {
-    console.log("DEBUG event:", {
+    logger.info({
+      tag: "incoming_event",
       channel: event.channel,
       text: event.text,
       subtype: event.subtype,
@@ -55,22 +53,38 @@ app.event("message", async ({ event }) => {
     if (lastTriggerTs === event.ts) return;
     lastTriggerTs = event.ts;
 
-    // Scripted sequence (top-level posts)
-    await sleep(8000); 
+    logger.info({ tag: "script_start" });
+
+    // USERS as before (via user tokens + fetch)
+    await sleep(8000);
+    logger.info({ tag: "post_linda" });
     await postAs(TOKEN_LINDA, "No problem.  Let’s roll back the change I just made, and we can lower Mateo’s hours on the Agentforce project for that week from 30 down to 20.");
-    
+
     await sleep(5000);
+    logger.info({ tag: "post_bob" });
     await postAs(TOKEN_BOB, "Thank you Linda, I appreciate it!");
-    
+
     await sleep(5000);
+    logger.info({ tag: "post_gina" });
     await postAs(TOKEN_GINA, "Thank you both. Mateo please proceed with the above update.");
-    
-    // NEW: Bot/app confirms it will handle it
+
+    // BOT (the app) via Slack SDK (uses the same xoxb token your app already has)
     await sleep(3000);
-    await postAs(TOKEN_BOT, "✅ Got it — I’ll reallocate the work and notify Mateo so he’s aware of the change.");
-    
+    logger.info({ tag: "post_bot_start" });
+    const botRes = await client.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,        // xoxb-***
+      channel: CHANNEL,
+      text: "✅ Got it — I’ll reallocate the work and notify Mateo so he’s aware of the change."
+    });
+
+    if (!botRes.ok) {
+      logger.error({ tag: "post_bot_error", botRes });
+    } else {
+      logger.info({ tag: "post_bot_ok", ts: botRes.ts });
+    }
+
   } catch (e) {
-    console.error("Handler error:", e);
+    logger.error("Handler error", e);
   }
 });
 
