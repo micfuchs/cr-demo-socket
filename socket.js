@@ -66,7 +66,7 @@ app.event("message", async ({ event, client, logger }) => {
 
     await sleep(5000);
     logger.info({ tag: "post_gina" });
-    await postAs(TOKEN_GINA, "Thank you both. Mateo please proceed with the above update.");
+    await postAs(TOKEN_GINA, "Thank you both. <@U09EXF70ZGC> please proceed with the above update for Mateo.");
 
     // BOT (the app) via Slack SDK (uses the same xoxb token your app already has)
     await sleep(3000);
